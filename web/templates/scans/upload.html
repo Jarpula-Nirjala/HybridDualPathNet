@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% block title %}Upload MRI — HybridDualPatNet{% endblock %}
+
+{% block content %}
+<div class="mb-4 fade-up">
+  <h1 class="page-title">Upload <span class="gradient-text">MRI Scan</span></h1>
+  <p class="page-subtitle">Upload a brain MRI image for AI-powered classification with Grad-CAM++ explainability.</p>
+</div>
+
+<div class="row g-4">
+  <div class="col-lg-7 fade-up">
+    <div class="glass-card">
+      <div class="card-body p-4 p-lg-5">
+        <form method="post" enctype="multipart/form-data" id="upload-form">
+          {% csrf_token %}
+          <div class="upload-zone mb-4" id="drop-zone" onclick="document.getElementById('id_original_image').click()">
+            <div class="upload-zone-icon"><i class="bi bi-cloud-arrow-up"></i></div>
+            <p class="mb-1 fw-semibold">Drag &amp; drop or click to upload</p>
+            <p class="text-muted small mb-0">JPG or PNG · Max 10 MB</p>
+            <input type="file" name="original_image" accept=".jpg,.jpeg,.png,image/jpeg,image/png"
+                   class="d-none" id="id_original_image" required>
+          </div>
+          <div id="file-name" class="text-muted small mb-3"></div>
+          {% if form.original_image.errors %}
+            <div class="alert alert-danger-glass alert-glass small mb-3">{{ form.original_image.errors }}</div>
+          {% endif %}
+          <button type="submit" class="btn btn-glow w-100 py-3">
+            <i class="bi bi-lightning-charge me-2"></i>Analyze Scan
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-5 fade-up">
+    <div class="glass-card h-100">
+      <div class="card-header"><i class="bi bi-image me-2"></i>Live Preview</div>
+      <div class="card-body text-center d-flex flex-column align-items-center justify-content-center" style="min-height: 280px;">
+        <img id="preview" src="" alt="Preview" class="result-img d-none mb-3">
+        <div id="preview-placeholder">
+          <i class="bi bi-file-earmark-image display-4 text-muted opacity-50"></i>
+          <p class="text-muted mt-3 mb-0">Select an image to preview</p>
+        </div>
+      </div>
+    </div>
+    <div class="glass-card mt-3 p-3">
+      <p class="small text-muted mb-0">
+        <i class="bi bi-info-circle me-1"></i>
+        Analysis uses 7-pass TTA + Grad-CAM++. Typical CPU time: 30–90 seconds.
+      </p>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  const input = document.getElementById('id_original_image');
+  const preview = document.getElementById('preview');
+  const placeholder = document.getElementById('preview-placeholder');
+  const fileName = document.getElementById('file-name');
+  const dropZone = document.getElementById('drop-zone');
+  const MAX_MB = 10;
+
+  function handleFile(file) {
+    if (!file) return;
+    const allowed = ['image/jpeg', 'image/png'];
+    if (!allowed.includes(file.type)) {
+      alert('Only JPG and PNG images are allowed.');
+      input.value = '';
+      return;
+    }
+    if (file.size > MAX_MB * 1024 * 1024) {
+      alert(`File must be ${MAX_MB} MB or smaller.`);
+      input.value = '';
+      return;
+    }
+    fileName.textContent = `Selected: ${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)`;
+    const reader = new FileReader();
+    reader.onload = e => {
+      preview.src = e.target.result;
+      preview.classList.remove('d-none');
+      placeholder.classList.add('d-none');
+    };
+    reader.readAsDataURL(file);
+  }
+
+  input.addEventListener('change', () => handleFile(input.files[0]));
+
+  dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('dragover'); });
+  dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+  dropZone.addEventListener('drop', e => {
+    e.preventDefault();
+    dropZone.classList.remove('dragover');
+    if (e.dataTransfer.files.length) {
+      input.files = e.dataTransfer.files;
+      handleFile(e.dataTransfer.files[0]);
+    }
+  });
+</script>
+{% endblock %}

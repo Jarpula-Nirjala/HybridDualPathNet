@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+*.egg-info/
+
+# Django
+.env
+db.sqlite3
+web/media/
+web/staticfiles/
+web/.env
+
+# Model weights (hosted on Google Drive — too large for GitHub)
+*.pth
+*.pt
+web/weights/*.pth
+web/weights/*.pt
+
+# IDE / OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Celery
+celerybeat-schedule

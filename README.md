@@ -1,65 +1,144 @@
 # 🧠 HybridDualPathNet – Brain MRI Disease Classifier
 
-🚀 A hybrid AI architecture for medical image classification combining CNN + Transformer fusion.
+🚀 A hybrid AI architecture for medical image classification combining **EfficientNetV2-S** + **Swin-Tiny** with cross-attention fusion.
 
-A deep learning-based system for classifying brain MRI scans into:
+Classifies brain MRI scans into:
+- **Alzheimer's Disease (AD)**
+- **Parkinson's Disease (PD)**
+- **Healthy Control**
 
-* Alzheimer’s Disease
-* Parkinson’s Disease
-* Healthy Control
-
-🚀 Achieved **98.46% test accuracy** using advanced deep learning techniques.
+Achieved **98.46% test accuracy** · **0.9981 macro AUC-ROC** with Grad-CAM++ explainability.
 
 ---
 
 ## 🔍 Overview
 
-**HybridDualPathNet** is a hybrid deep learning framework that combines **EfficientNetV2** and **Swin Transformer** using **cross-attention fusion** to accurately classify neurological conditions from MRI scans.
+**HybridDualPathNet** combines CNN local features and Transformer global context via **Cross-Fusion Attention**, with **7-pass Test-Time Augmentation** and **Grad-CAM++** heatmaps for clinical interpretability.
 
-It also integrates **Grad-CAM explainability** to highlight important brain regions influencing predictions.
+This repository includes:
+1. **Training notebook** — full PyTorch training pipeline
+2. **Django web app** (`web/`) — production-ready deployment with Celery, PostgreSQL, Render/Railway support
+3. **Results & visualizations** — confusion matrix, ROC, Grad-CAM outputs
 
 ---
 
 ## 🧠 Model Architecture
 
-* EfficientNetV2 (Local feature extraction)
-* Swin Transformer (Global context learning)
-* Cross-Attention Fusion Module
+* EfficientNetV2-S (Local spatial feature extraction)
+* Swin-Tiny Transformer (Global contextual features)
+* Cross-Fusion Attention Module
 * Focal Loss + Label Smoothing
 * OneCycle Learning Rate Scheduler
 * Test-Time Augmentation (TTA)
+* Grad-CAM++ explainability
 
 ---
 
-## 🚀 Features
+## 📂 Project Structure
 
-* Hybrid Deep Learning Model (CNN + Transformer)
-* Cross-Attention based feature fusion
-* Grad-CAM++ for explainability
-* Test-Time Augmentation (TTA)
-* High-performance classification with strong generalization
+```
+HybridDualNetPath/
+├── notebook/
+│   ├── NIRJALA_13.ipynb
+│   └── IIITSURAT_MAJOR_PROJECT_UI22EC34.ipynb
+├── outputs/                    # Training result plots
+├── web/                        # Django web application
+│   ├── config/                 # Settings (dev/prod), Celery
+│   ├── accounts/               # Auth (signup/login)
+│   ├── scans/                  # Upload, inference, history
+│   ├── inference/              # Model singleton, TTA, Grad-CAM++
+│   ├── templates/              # Modern UI templates
+│   ├── weights/                # Place final_model.pth here
+│   ├── manage.py
+│   ├── requirements.txt
+│   ├── Procfile                # Railway/Render
+│   └── render.yaml
+├── README.md
+└── requirements.txt              # Notebook dependencies
+```
+
+---
+
+## 🌐 Django Web App
+
+Full-stack brain MRI classifier with modern UI, user accounts, async inference, and explainability.
+
+### Quick Start
+
+```bash
+cd web
+python -m venv .venv
+source .venv/bin/activate          # Windows: .venv\Scripts\activate
+pip install -r requirements.txt --extra-index-url https://download.pytorch.org/whl/cpu
+
+cp .env.example .env
+python download_model.py           # Downloads weights from Google Drive
+python manage.py migrate
+python manage.py createsuperuser
+python manage.py runserver
+```
+
+Open **http://127.0.0.1:8000** — sign up, upload MRI, view Grad-CAM++ results.
+
+### Verify Setup
+
+```bash
+python manage.py check_setup
+```
+
+See `web/README.md` for Render/Railway deployment.
+
+---
+
+## ▶️ Training (Notebook)
+
+```bash
+git clone https://github.com/Jarpula-Nirjala/HybridDualNetPath.git
+cd HybridDualNetPath
+pip install -r requirements.txt
+```
+
+Open `notebook/NIRJALA_13.ipynb` or `notebook/IIITSURAT_MAJOR_PROJECT_UI22EC34.ipynb` in Google Colab.
+
+---
+
+## 📥 Model Download
+
+Trained weights (~195 MB) are hosted on Google Drive (too large for GitHub):
+
+👉 **[Download Trained Model](https://drive.google.com/file/d/1rDF-vTOgMSIrpE3rV1OXukyhXiVNxxRq/view?usp=sharing)**
+
+For the web app, either:
+- Run `python web/download_model.py` (auto-download), or
+- Copy manually to `web/weights/final_model.pth`
+
+---
+
+## ⚠️ Dataset
+
+Dataset not included due to size.
+
+👉 **[Download Dataset](https://drive.google.com/file/d/1AnHbNwv5rBtxYwCBDUwXS_dIGAs2FX1F/view?usp=sharing)**
 
 ---
 
 ## 📊 Model Performance
 
-* ✅ **Test Accuracy :** 98.46%
-* ✅ **Macro AUC-ROC:** 0.9981
-* ✅ **F1 Score:** ~0.9991 across all classes
+| Metric | Value |
+|--------|-------|
+| Test Accuracy (TTA) | 98.46% |
+| Macro AUC-ROC | 0.9981 |
+| F1 — AD | 0.982 |
+| F1 — Control | 0.981 |
+| F1 — PD | 0.998 |
 
 ---
 
 ## 📸 Results
 
-### 🔹 Confusion Matrix
-
 ![Confusion Matrix](outputs/confusion_matrix.png)
 
-### 🔹 Training Curves
-
 ![Training Curves](outputs/training_curves.png)
-
-### 🔹 ROC Curve
 
 ![ROC Curve](outputs/roc_curves.png)
 
@@ -67,101 +146,28 @@ It also integrates **Grad-CAM explainability** to highlight important brain regi
 
 ## 🛠 Tech Stack
 
-* Python
-* PyTorch
-* OpenCV
-* NumPy
-* Matplotlib
-* Scikit-learn
-* timm
-
----
-
-## 📂 Project Structure
-
-```
-NeuroFuseNet/
-│
-├── notebook/
-│   └── NIRJALA_13.ipynb
-│
-├── outputs/
-│   ├── confusion_matrix.png
-│   ├── training_curves.png
-│   ├── roc_curves.png
-│   ├── gradcam_visualizations.png
-│   ├── sample_images.png
-│   └── results_summary.json
-│
-├── model/
-│   └── (model available via Google Drive)
-│
-├── README.md
-├── requirements.txt
-```
-
----
-
-## ▶️ How to Run
-
-### 1. Clone the repository
-
-```bash
-git clone https://github.com/Jarpula-Nirjala/NeuroFuseNet.git
-cd NeuroFuseNet
-```
-
-### 2. Install dependencies
-
-```bash
-pip install -r requirements.txt
-```
-
-### 3. Run the notebook
-
-Open:
-
-```
-notebook/NIRJALA_13.ipynb
-```
-
----
-
-## ⚠️ Dataset
-
-Due to size limitations, the dataset is not included.
-
-👉 **Download Dataset:**
-https://drive.google.com/file/d/1AnHbNwv5rBtxYwCBDUwXS_dIGAs2FX1F/view?usp=sharing
-
----
-
-## 📥 Model Download
-
-Due to GitHub file size limitations (~195MB), the trained model is hosted on Google Drive:
-
-👉 **Download Trained Model:**
-https://drive.google.com/file/d/1rDF-vTOgMSIrpE3rV1OXukyhXiVNxxRq/view?usp=sharing
-
----
-
-## 📌 Future Improvements
-
-* Deploy as a web application (Streamlit / Flask)
-* Add real-time MRI prediction interface
-* Expand dataset for better generalization
-* Optimize model for faster inference
+| ML | Web |
+|----|-----|
+| PyTorch, timm | Django 5, DRF |
+| EfficientNetV2-S | Celery + Redis |
+| Swin-Tiny | PostgreSQL |
+| Grad-CAM++ | Bootstrap 5, HTMX |
+| Albumentations | WhiteNoise, Gunicorn |
 
 ---
 
 ## ✨ Author
 
-**Jarpula Nirjala**
-📧 [nirjala8462@gmail.com](mailto:nirjala8462@gmail.com)
-🔗 https://www.linkedin.com/in/nirjala-jarpula-749346321/
+**Jarpula Nirjala (JARPULANIRJALA)**  
+📧 [nirjala8462@gmail.com](mailto:nirjala8462@gmail.com)  
+📱 +91 7842849340  
+🔗 [LinkedIn](https://www.linkedin.com/in/nirjala-jarpula-749346321/) · [GitHub](https://github.com/Jarpula-Nirjala)  
+🎓 IIIT Surat · B.Tech ECE · 2022–2026
 
 ---
 
 ## ⭐ Support
 
-If you like this project, give it a ⭐ on GitHub!
+If you find this project useful, give it a ⭐ on GitHub!
+
+> **Disclaimer:** Research and educational use only. Not a medical device.

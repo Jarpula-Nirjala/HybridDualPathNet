@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+{% block title %}About — {{ AUTHOR.name }}{% endblock %}
+
+{% block content %}
+<div class="row g-4">
+  <div class="col-lg-4">
+    <div class="author-card text-center sticky-lg-top" style="top: 90px;">
+      <div class="author-avatar mx-auto">JN</div>
+      <h1 class="h4 mb-1">{{ AUTHOR.name }}</h1>
+      <p class="text-muted small">ECE · IIIT Surat</p>
+      <div class="social-links justify-content-center mb-3">
+        <a href="{{ AUTHOR.github }}" target="_blank" rel="noopener" class="social-link"><i class="bi bi-github"></i></a>
+        <a href="{{ AUTHOR.linkedin }}" target="_blank" rel="noopener" class="social-link"><i class="bi bi-linkedin"></i></a>
+        <a href="{{ AUTHOR.leetcode }}" target="_blank" rel="noopener" class="social-link"><i class="bi bi-code-square"></i></a>
+        <a href="{{ AUTHOR.gfg }}" target="_blank" rel="noopener" class="social-link"><i class="bi bi-journal-code"></i></a>
+        <a href="mailto:{{ AUTHOR.email }}" class="social-link"><i class="bi bi-envelope"></i></a>
+      </div>
+      <a href="tel:{{ AUTHOR.phone }}" class="footer-link"><i class="bi bi-telephone me-1"></i>{{ AUTHOR.phone }}</a>
+      <a href="mailto:{{ AUTHOR.email }}" class="footer-link"><i class="bi bi-envelope me-1"></i>{{ AUTHOR.email }}</a>
+    </div>
+  </div>
+
+  <div class="col-lg-8">
+    <div class="glass-card p-4 p-lg-5 mb-4 fade-up">
+      <h2 class="page-title mb-4">About <span class="gradient-text">Me</span></h2>
+      <p class="text-muted">
+        B.Tech student in Electronics &amp; Communication Engineering at
+        <strong class="text-white">{{ AUTHOR.college }}</strong> ({{ AUTHOR.years }}), CGPA {{ AUTHOR.cgpa }}.
+        Passionate about deep learning, systems engineering, and building production-ready AI applications
+        with explainability and real-world impact.
+      </p>
+    </div>
+
+    <div class="resume-section fade-up">
+      <h3><i class="bi bi-mortarboard me-2"></i>Education</h3>
+      <div class="timeline-item">
+        <h4 class="h6 mb-1">{{ AUTHOR.college }}</h4>
+        <p class="text-muted small mb-1">{{ AUTHOR.years }}</p>
+        <p class="mb-1">{{ AUTHOR.degree }}</p>
+        <span class="skill-tag">CGPA {{ AUTHOR.cgpa }}</span>
+      </div>
+    </div>
+
+    <div class="resume-section fade-up">
+      <h3><i class="bi bi-code-slash me-2"></i>Technical Skills</h3>
+      <div class="glass-card p-4">
+        <p class="small text-muted mb-2"><strong class="text-white">Languages:</strong></p>
+        <span class="skill-tag">Python</span><span class="skill-tag">C++</span><span class="skill-tag">C</span>
+        <span class="skill-tag">Bash</span><span class="skill-tag">JavaScript</span><span class="skill-tag">MATLAB</span>
+
+        <p class="small text-muted mb-2 mt-3"><strong class="text-white">AI / ML:</strong></p>
+        <span class="skill-tag">PyTorch</span><span class="skill-tag">TensorFlow</span><span class="skill-tag">Scikit-learn</span>
+        <span class="skill-tag">LangChain</span><span class="skill-tag">RAG Pipelines</span><span class="skill-tag">Grad-CAM++</span>
+
+        <p class="small text-muted mb-2 mt-3"><strong class="text-white">Backend:</strong></p>
+        <span class="skill-tag">Django</span><span class="skill-tag">Flask</span><span class="skill-tag">FastAPI</span>
+        <span class="skill-tag">Node.js</span><span class="skill-tag">REST APIs</span><span class="skill-tag">JWT</span>
+
+        <p class="small text-muted mb-2 mt-3"><strong class="text-white">DevOps &amp; Infra:</strong></p>
+        <span class="skill-tag">Docker</span><span class="skill-tag">Linux</span><span class="skill-tag">CI/CD</span>
+        <span class="skill-tag">QEMU</span><span class="skill-tag">Redis</span><span class="skill-tag">Celery</span>
+
+        <p class="small text-muted mb-2 mt-3"><strong class="text-white">Databases:</strong></p>
+        <span class="skill-tag">PostgreSQL</span><span class="skill-tag">MongoDB</span><span class="skill-tag">Redis</span><span class="skill-tag">SQLite</span>
+      </div>
+    </div>
+
+    <div class="resume-section fade-up">
+      <h3><i class="bi bi-briefcase me-2"></i>Experience</h3>
+      <div class="timeline-item">
+        <div class="d-flex justify-content-between flex-wrap gap-2 mb-2">
+          <h4 class="h6 mb-0">Systems &amp; Benchmark Engineering Intern</h4>
+          <span class="skill-tag">Jan 2026 – Mar 2026</span>
+        </div>
+        <p class="text-muted small mb-2"><strong class="text-white">AirDawg Labs</strong> · Bangalore, India (Remote)</p>
+        <ul class="text-muted small mb-0">
+          <li>Engineered RLHF data pipelines extracting 5,000+ training signals from production codebases; curated 50+ adversarial benchmark tasks for frontier LLMs.</li>
+          <li>Built Dockerized execution environments with deterministic test suites across Rust, Go, Python, and Bash.</li>
+          <li>Engineered isolated challenge environments (custom Linux kernel via QEMU) for safe LLM command execution.</li>
+          <li>Improved evaluation reproducibility by 30% through CI/CD and DevOps best practices.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="resume-section fade-up">
+      <h3><i class="bi bi-folder2-open me-2"></i>Projects</h3>
+      <div class="row g-3">
+        <div class="col-md-6">
+          <div class="glass-card project-card h-100">
+            <h4><i class="bi bi-brain me-1 text-info"></i> Brain MRI Disease Classifier</h4>
+            <p class="text-muted small">PyTorch · EfficientNetV2 · Swin Transformer · Grad-CAM++</p>
+            <ul class="text-muted small mb-3">
+              <li>Hybrid dual-path model on 6,000+ MRI images — 98.46% test accuracy, 0.9981 macro AUC-ROC.</li>
+              <li>Grad-CAM++ explainability for clinical decision support visualization.</li>
+            </ul>
+            <a href="{% url 'core:home' %}" class="social-link"><i class="bi bi-box-arrow-up-right"></i> This App</a>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="glass-card project-card h-100">
+            <h4><i class="bi bi-droplet me-1 text-danger"></i> Anemia Detection System</h4>
+            <p class="text-muted small">PyTorch · EfficientNet-B3 · Flask · Docker · Grad-CAM</p>
+            <ul class="text-muted small mb-3">
+              <li>Smartphone-based anemia screening via conjunctiva &amp; fingernail images.</li>
+              <li>Flask app with patient records, analytics dashboard, PDF reports; Dockerized deployment.</li>
+            </ul>
+            <a href="{{ AUTHOR.github }}" target="_blank" class="social-link"><i class="bi bi-github"></i> GitHub</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="resume-section fade-up">
+      <h3><i class="bi bi-trophy me-2"></i>Achievements</h3>
+      <div class="glass-card p-4">
+        <ul class="text-muted small mb-0">
+          <li class="mb-2">Solved <strong class="text-white">400+</strong> DSA problems on LeetCode and GeeksforGeeks.</li>
+          <li class="mb-2"><strong class="text-white">Benchmark Team Lead:</strong> Led 20+ annotators curating adversarial tasks from GitHub PRs — evaluation set breaking frontier LLMs (Anthropic, OpenAI).</li>
+          <li>Developed benchmark datasets and evaluation pipelines for frontier LLM reasoning assessment.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

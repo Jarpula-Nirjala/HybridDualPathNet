@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block title %}Scan History — HybridDualPatNet{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4 fade-up">
+  <div>
+    <h1 class="page-title h4 mb-1">Scan <span class="gradient-text">History</span></h1>
+    <p class="text-muted small mb-0">All your past MRI analyses</p>
+  </div>
+  <a href="{% url 'scans:upload' %}" class="btn btn-glow btn-sm"><i class="bi bi-plus-lg me-1"></i>New Scan</a>
+</div>
+
+{% if page_obj.object_list %}
+<div class="row g-3">
+  {% for scan in page_obj %}
+  <div class="col-md-4 col-lg-3 fade-up">
+    <div class="glass-card scan-card h-100">
+      {% if scan.original_image %}
+      <img src="{{ scan.original_image.url }}" class="scan-thumb w-100" alt="Scan {{ scan.pk }}">
+      {% endif %}
+      <div class="card-body p-3">
+        <h2 class="h6 mb-1">Scan #{{ scan.pk }}</h2>
+        <p class="small text-muted mb-2">{{ scan.created_at|date:"M d, Y H:i" }}</p>
+        <div class="d-flex flex-wrap gap-1">
+          <span class="badge badge-glow {% if scan.status == 'done' %}badge-done{% elif scan.status == 'failed' %}badge-failed{% else %}badge-pending{% endif %}">
+            {{ scan.get_status_display }}
+          </span>
+          {% if scan.predicted_class %}
+          <span class="badge badge-glow {% if scan.predicted_class == 'AD' %}badge-ad{% elif scan.predicted_class == 'PD' %}badge-pd{% else %}badge-control{% endif %}">
+            {{ scan.predicted_class }}
+          </span>
+          {% endif %}
+        </div>
+      </div>
+      <div class="card-footer p-3 pt-0 border-0">
+        <a href="{% url 'scans:result' scan.pk %}" class="btn btn-outline-glass btn-sm w-100">View Result</a>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+{% if page_obj.has_other_pages %}
+<nav class="mt-4">
+  <ul class="pagination justify-content-center">
+    {% if page_obj.has_previous %}
+    <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
+    {% endif %}
+    <li class="page-item disabled"><span class="page-link">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span></li>
+    {% if page_obj.has_next %}
+    <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
+    {% endif %}
+  </ul>
+</nav>
+{% endif %}
+
+{% else %}
+<div class="glass-card p-5 text-center fade-up">
+  <i class="bi bi-inbox display-4 text-muted opacity-50"></i>
+  <p class="text-muted mt-3 mb-3">No scans yet. Upload your first brain MRI to get started.</p>
+  <a href="{% url 'scans:upload' %}" class="btn btn-glow">Upload First Scan</a>
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+{% block title %}HybridDualPatNet — Brain MRI AI Classifier{% endblock %}
+
+{% block content %}
+<section class="hero-section">
+  <div class="hero-badge fade-up">
+    <i class="bi bi-stars"></i> Explainable AI · Grad-CAM++ · 98.46% Accuracy
+  </div>
+  <h1 class="hero-title fade-up">
+    Brain MRI <span class="gradient-text">Disease Classifier</span>
+  </h1>
+  <p class="hero-desc fade-up">
+    Hybrid dual-path deep learning model fusing <strong>EfficientNetV2-S</strong> and <strong>Swin-Tiny</strong>
+    via cross-attention to classify Alzheimer's, Parkinson's, and Healthy brain scans with full explainability.
+  </p>
+  <div class="hero-actions fade-up">
+    {% if user.is_authenticated %}
+    <a href="{% url 'scans:upload' %}" class="btn btn-glow btn-lg"><i class="bi bi-cloud-upload me-2"></i>Upload MRI Scan</a>
+    {% else %}
+    <a href="{% url 'accounts:signup' %}" class="btn btn-glow btn-lg"><i class="bi bi-rocket-takeoff me-2"></i>Get Started Free</a>
+  <a href="{% url 'accounts:login' %}" class="btn btn-outline-glass btn-lg">Sign In</a>
+    {% endif %}
+    <a href="{% url 'core:how_to_use' %}" class="btn btn-outline-glass btn-lg"><i class="bi bi-book me-2"></i>How to Use</a>
+  </div>
+
+  <div class="stat-grid fade-up">
+    <div class="stat-card">
+      <div class="stat-value">98.46%</div>
+      <div class="stat-label">Test Accuracy</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">0.998</div>
+      <div class="stat-label">Macro AUC-ROC</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">6K+</div>
+      <div class="stat-label">MRI Images Trained</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-value">3</div>
+      <div class="stat-label">Disease Classes</div>
+    </div>
+  </div>
+</section>
+
+<section class="mb-5 fade-up">
+  <h2 class="page-title text-center mb-4">How It <span class="gradient-text">Works</span></h2>
+  <div class="row g-4">
+    <div class="col-md-4">
+      <div class="glass-card h-100 p-4">
+        <div class="feature-icon"><i class="bi bi-upload text-info"></i></div>
+        <div class="feature-title">1. Upload MRI</div>
+        <p class="text-muted small mb-0">Upload a brain MRI image (JPG/PNG, max 10 MB). Preview instantly before analysis.</p>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="glass-card h-100 p-4">
+        <div class="feature-icon"><i class="bi bi-cpu text-primary"></i></div>
+        <div class="feature-title">2. AI Inference</div>
+        <p class="text-muted small mb-0">7-pass Test-Time Augmentation runs on our hybrid EfficientNet + Swin fusion model.</p>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="glass-card h-100 p-4">
+        <div class="feature-icon"><i class="bi bi-eye text-success"></i></div>
+        <div class="feature-title">3. Explainable Results</div>
+        <p class="text-muted small mb-0">View prediction, confidence chart, and Grad-CAM++ heatmap highlighting brain regions.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="mb-5 fade-up">
+  <h2 class="page-title text-center mb-4">Model <span class="gradient-text">Architecture</span></h2>
+  <div class="row g-4 align-items-center">
+    <div class="col-lg-6">
+      <div class="glass-card p-4">
+        <ul class="list-unstyled mb-0">
+          <li class="mb-3 d-flex gap-3">
+            <i class="bi bi-check-circle-fill text-success mt-1"></i>
+            <div><strong>Local Path:</strong> EfficientNetV2-S for spatial feature extraction</div>
+          </li>
+          <li class="mb-3 d-flex gap-3">
+            <i class="bi bi-check-circle-fill text-success mt-1"></i>
+            <div><strong>Global Path:</strong> Swin-Tiny Transformer for contextual features</div>
+          </li>
+          <li class="mb-3 d-flex gap-3">
+            <i class="bi bi-check-circle-fill text-success mt-1"></i>
+            <div><strong>Fusion:</strong> Cross-Fusion Attention module</div>
+          </li>
+          <li class="mb-3 d-flex gap-3">
+            <i class="bi bi-check-circle-fill text-success mt-1"></i>
+            <div><strong>Explainability:</strong> Grad-CAM++ on local encoder conv layers</div>
+          </li>
+          <li class="d-flex gap-3">
+            <i class="bi bi-check-circle-fill text-success mt-1"></i>
+            <div><strong>Classes:</strong> Alzheimer's (AD) · Parkinson's (PD) · Healthy Control</div>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="col-lg-6">
+      <div class="author-card">
+        <div class="author-avatar">JN</div>
+        <h3 class="h5 mb-1">{{ AUTHOR.name }}</h3>
+        <p class="text-muted small mb-2">{{ AUTHOR.degree }}</p>
+        <p class="text-muted small mb-3">{{ AUTHOR.college }} · CGPA {{ AUTHOR.cgpa }}</p>
+        <div class="d-flex flex-wrap gap-2 mb-3">
+          <a href="mailto:{{ AUTHOR.email }}" class="social-link"><i class="bi bi-envelope"></i> {{ AUTHOR.email }}</a>
+          <a href="tel:{{ AUTHOR.phone }}" class="social-link"><i class="bi bi-telephone"></i> {{ AUTHOR.phone }}</a>
+        </div>
+        <a href="{% url 'core:about' %}" class="btn btn-outline-glass btn-sm">View Full Profile <i class="bi bi-arrow-right ms-1"></i></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="fade-up">
+  <div class="glass-card p-4 p-lg-5 text-center">
+    <h2 class="page-title mb-3">Ready to Analyze?</h2>
+    <p class="text-muted mb-4">Upload a brain MRI scan and get AI-powered classification with visual explainability in under 2 minutes.</p>
+    {% if user.is_authenticated %}
+    <a href="{% url 'scans:upload' %}" class="btn btn-glow btn-lg">Start Analysis</a>
+    {% else %}
+    <a href="{% url 'accounts:signup' %}" class="btn btn-glow btn-lg me-2">Create Account</a>
+    <a href="{% url 'core:how_to_use' %}" class="btn btn-outline-glass btn-lg">Read Guide</a>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,49 @@
+<footer class="site-footer">
+  <div class="container">
+    <div class="row g-4">
+      <div class="col-lg-4">
+        <div class="footer-brand mb-2">HybridDualPatNet</div>
+        <p class="text-muted small mb-3">
+          Hybrid dual-path deep learning for brain MRI classification with Grad-CAM++ explainable AI.
+          Research &amp; educational use only — not a medical device.
+        </p>
+        <div class="social-links">
+          <a href="{{ AUTHOR.github }}" target="_blank" rel="noopener" class="social-link"><i class="bi bi-github"></i> GitHub</a>
+          <a href="{{ AUTHOR.linkedin }}" target="_blank" rel="noopener" class="social-link"><i class="bi bi-linkedin"></i> LinkedIn</a>
+          <a href="{{ AUTHOR.leetcode }}" target="_blank" rel="noopener" class="social-link"><i class="bi bi-code-square"></i> LeetCode</a>
+          <a href="{{ AUTHOR.gfg }}" target="_blank" rel="noopener" class="social-link"><i class="bi bi-journal-code"></i> GfG</a>
+        </div>
+      </div>
+      <div class="col-6 col-lg-2">
+        <div class="footer-heading">Navigate</div>
+        <a href="{% url 'core:home' %}" class="footer-link">Home</a>
+        <a href="{% url 'core:how_to_use' %}" class="footer-link">How to Use</a>
+        <a href="{% url 'core:about' %}" class="footer-link">About Author</a>
+        {% if user.is_authenticated %}
+        <a href="{% url 'scans:upload' %}" class="footer-link">Upload Scan</a>
+        <a href="{% url 'scans:history' %}" class="footer-link">Scan History</a>
+        {% else %}
+        <a href="{% url 'accounts:signup' %}" class="footer-link">Sign Up</a>
+        <a href="{% url 'accounts:login' %}" class="footer-link">Login</a>
+        {% endif %}
+      </div>
+      <div class="col-6 col-lg-3">
+        <div class="footer-heading">Author</div>
+        <p class="text-muted small mb-1 fw-semibold" style="color: var(--text-primary) !important;">{{ AUTHOR.name }}</p>
+        <a href="tel:{{ AUTHOR.phone }}" class="footer-link"><i class="bi bi-telephone me-1"></i>{{ AUTHOR.phone }}</a>
+        <a href="mailto:{{ AUTHOR.email }}" class="footer-link"><i class="bi bi-envelope me-1"></i>{{ AUTHOR.email }}</a>
+        <p class="text-muted small mt-2 mb-0">{{ AUTHOR.college }}</p>
+        <p class="text-muted small">{{ AUTHOR.degree }} · {{ AUTHOR.years }}</p>
+      </div>
+      <div class="col-lg-3">
+        <div class="footer-heading">Model Performance</div>
+        <p class="text-muted small mb-1"><strong class="text-white">98.46%</strong> test accuracy</p>
+        <p class="text-muted small mb-1"><strong class="text-white">0.9981</strong> macro AUC-ROC</p>
+        <p class="text-muted small mb-0">EfficientNetV2-S + Swin-Tiny · Grad-CAM++</p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      &copy; {% now "Y" %} <strong>{{ AUTHOR.name }}</strong> · HybridDualPatNet · IIIT Surat Major Project
+    </div>
+  </div>
+</footer>

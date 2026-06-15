@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Processing — Scan #{{ scan.pk }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-7 fade-up">
+    <div class="glass-card">
+      <div class="card-body p-5 text-center"
+           id="processing-panel"
+           hx-get="{% url 'scans:status' scan.pk %}"
+           hx-trigger="every 2s"
+           hx-swap="none">
+        <div class="processing-ring"></div>
+        <h1 class="h4 mb-2 processing-pulse">Analyzing Scan <span class="gradient-text">#{{ scan.pk }}</span></h1>
+        <p class="text-muted mb-1">Running 7-pass TTA inference + Grad-CAM++ explainability</p>
+        <p class="small text-muted">HybridDualPathModel · EfficientNetV2-S + Swin-Tiny</p>
+        <div class="mt-4 d-flex justify-content-center gap-2 flex-wrap">
+          <span class="skill-tag"><i class="bi bi-cpu"></i> CPU Inference</span>
+          <span class="skill-tag"><i class="bi bi-hourglass-split"></i> 30–90 sec</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  document.body.addEventListener('htmx:afterRequest', function (evt) {
+    if (!evt.detail.xhr.response) return;
+    try {
+      const data = JSON.parse(evt.detail.xhr.response);
+      if (data.status === 'done' || data.status === 'failed') {
+        window.location.href = data.redirect_url;
+      }
+    } catch (e) {}
+  });
+</script>
+{% endblock %}

@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+{% block title %}How to Use — HybridDualPatNet{% endblock %}
+
+{% block content %}
+<div class="text-center mb-5 fade-up">
+  <h1 class="page-title">How to <span class="gradient-text">Use</span></h1>
+  <p class="page-subtitle mx-auto">Follow this step-by-step guide to upload brain MRI scans and get AI-powered disease classification with explainable heatmaps.</p>
+</div>
+
+<div class="row g-4 mb-5">
+  <div class="col-lg-8 mx-auto">
+    <div class="step-item fade-up">
+      <div class="step-number">1</div>
+      <div>
+        <h3 class="h5 mb-2">Create an Account</h3>
+        <p class="text-muted small mb-2">Sign up with a username and password. Your scan history is saved securely to your account.</p>
+        {% if not user.is_authenticated %}
+        <a href="{% url 'accounts:signup' %}" class="btn btn-glow btn-sm">Sign Up Now</a>
+        {% else %}
+        <span class="badge badge-done badge-glow"><i class="bi bi-check-lg"></i> You're logged in as {{ user.username }}</span>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="step-item fade-up">
+      <div class="step-number">2</div>
+      <div>
+        <h3 class="h5 mb-2">Upload a Brain MRI Image</h3>
+        <p class="text-muted small mb-0">
+          Go to <strong>Upload</strong> and select a brain MRI image.
+          Supported formats: <strong>JPG, PNG</strong>. Maximum file size: <strong>10 MB</strong>.
+          You'll see a live preview before submitting.
+        </p>
+      </div>
+    </div>
+
+    <div class="step-item fade-up">
+      <div class="step-number">3</div>
+      <div>
+        <h3 class="h5 mb-2">Wait for AI Analysis</h3>
+        <p class="text-muted small mb-0">
+          The processing page polls every 2 seconds. Our hybrid model runs
+          <strong>7-pass Test-Time Augmentation (TTA)</strong> inference and generates a
+          <strong>Grad-CAM++</strong> heatmap. On CPU this typically takes 30–90 seconds.
+        </p>
+      </div>
+    </div>
+
+    <div class="step-item fade-up">
+      <div class="step-number">4</div>
+      <div>
+        <h3 class="h5 mb-2">Review Results</h3>
+        <p class="text-muted small mb-0">
+          View the predicted class (AD / PD / Control), confidence bar chart, side-by-side
+          original MRI vs heatmap overlay, and processing time. Results are saved to your history.
+        </p>
+      </div>
+    </div>
+
+    <div class="step-item fade-up">
+      <div class="step-number">5</div>
+      <div>
+        <h3 class="h5 mb-2">Browse Scan History</h3>
+        <p class="text-muted small mb-0">
+          Access <strong>History</strong> to see all past scans with thumbnails, status badges,
+          and quick links to re-view any result.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-4 mb-5 fade-up">
+  <div class="col-md-6">
+    <div class="glass-card p-4 h-100">
+      <h3 class="h6 mb-3"><i class="bi bi-info-circle text-info me-2"></i>Supported Classes</h3>
+      <div class="d-flex flex-wrap gap-2">
+        <span class="badge badge-ad badge-glow">AD — Alzheimer's Disease</span>
+        <span class="badge badge-pd badge-glow">PD — Parkinson's Disease</span>
+        <span class="badge badge-control badge-glow">CONTROL — Healthy</span>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="glass-card p-4 h-100">
+      <h3 class="h6 mb-3"><i class="bi bi-shield-exclamation text-warning me-2"></i>Important Notes</h3>
+      <ul class="text-muted small mb-0">
+        <li>This tool is for <strong>research and education only</strong>.</li>
+        <li>Not FDA-approved — do not use for clinical diagnosis.</li>
+        <li>Always consult a qualified healthcare professional.</li>
+        <li>Model weights must be present in <code>weights/</code> for inference to succeed.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="glass-card p-4 p-lg-5 text-center fade-up">
+  <h2 class="h4 mb-3">Ready to try it?</h2>
+  {% if user.is_authenticated %}
+  <a href="{% url 'scans:upload' %}" class="btn btn-glow btn-lg"><i class="bi bi-cloud-upload me-2"></i>Upload MRI Scan</a>
+  {% else %}
+  <a href="{% url 'accounts:signup' %}" class="btn btn-glow btn-lg me-2">Create Account</a>
+  <a href="{% url 'accounts:login' %}" class="btn btn-outline-glass btn-lg">Login</a>
+  {% endif %}
+</div>
+{% endblock %}

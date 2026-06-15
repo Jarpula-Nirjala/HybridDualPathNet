@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% block title %}Admin Stats — HybridDualPatNet{% endblock %}
+{% block extra_head %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="mb-4 fade-up">
+  <h1 class="page-title h4">Admin <span class="gradient-text">Statistics</span></h1>
+  <p class="text-muted small">Platform-wide scan analytics</p>
+</div>
+
+<div class="stat-grid mb-4 fade-up">
+  <div class="stat-card">
+    <div class="stat-value">{{ total_scans }}</div>
+    <div class="stat-label">Total Scans</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-value" style="background: linear-gradient(135deg,#10b981,#22d3ee);-webkit-background-clip:text;background-clip:text;">{{ done_scans }}</div>
+    <div class="stat-label">Completed</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-value" style="background: linear-gradient(135deg,#ef4444,#ec4899);-webkit-background-clip:text;background-clip:text;">{{ failed_scans }}</div>
+    <div class="stat-label">Failed</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-value">{{ avg_processing|floatformat:1 }}s</div>
+    <div class="stat-label">Avg Processing</div>
+  </div>
+</div>
+
+<div class="row g-4 fade-up">
+  <div class="col-lg-6">
+    <div class="glass-card">
+      <div class="card-header"><i class="bi bi-pie-chart me-2"></i>Class Distribution</div>
+      <div class="card-body chart-container">
+        <canvas id="pieChart" height="200"></canvas>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-6">
+    <div class="glass-card h-100">
+      <div class="card-header"><i class="bi bi-graph-up me-2"></i>Average Confidence</div>
+      <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center mb-3 p-3 rounded" style="background:rgba(231,76,60,0.1);">
+          <span>Alzheimer's (AD)</span>
+          <strong class="text-danger">{{ avg_confidence_ad_pct|floatformat:1 }}%</strong>
+        </div>
+        <div class="d-flex justify-content-between align-items-center mb-3 p-3 rounded" style="background:rgba(16,185,129,0.1);">
+          <span>Parkinson's (PD)</span>
+          <strong class="text-success">{{ avg_confidence_pd_pct|floatformat:1 }}%</strong>
+        </div>
+        <div class="d-flex justify-content-between align-items-center p-3 rounded" style="background:rgba(59,130,246,0.1);">
+          <span>Healthy (Control)</span>
+          <strong class="text-primary">{{ avg_confidence_control_pct|floatformat:1 }}%</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+{{ class_labels|json_script:"class-labels" }}
+{{ class_counts|json_script:"class-counts" }}
+<script>
+  Chart.defaults.color = '#8b9cb8';
+  const labels = JSON.parse(document.getElementById('class-labels').textContent);
+  const counts = JSON.parse(document.getElementById('class-counts').textContent);
+  if (labels.length) {
+    new Chart(document.getElementById('pieChart'), {
+      type: 'doughnut',
+      data: {
+        labels: labels,
+        datasets: [{
+          data: counts,
+          backgroundColor: ['rgba(231,76,60,0.8)', 'rgba(59,130,246,0.8)', 'rgba(16,185,129,0.8)'],
+          borderColor: ['#e74c3c', '#3b82f6', '#10b981'],
+          borderWidth: 2
+        }]
+      },
+      options: { plugins: { legend: { position: 'bottom' } } }
+    });
+  }
+</script>
+{% endblock %}

@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+{% block title %}Result — Scan #{{ scan.pk }}{% endblock %}
+{% block extra_head %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="alert alert-glass alert-warning-glass mb-4 fade-up">
+  <i class="bi bi-exclamation-triangle me-2"></i>
+  <strong>Medical Disclaimer:</strong> Research and educational purposes only. Not a medical device.
+  Always consult a qualified healthcare professional.
+</div>
+
+{% if scan.status == 'failed' %}
+<div class="alert alert-glass alert-danger-glass fade-up">
+  <i class="bi bi-x-circle me-2"></i>
+  <strong>Analysis failed:</strong> {{ scan.error_message|default:"Unknown error" }}
+  <p class="small mt-2 mb-0">Ensure model weights are in <code>weights/final_model.pth</code></p>
+</div>
+{% else %}
+
+<div class="glass-card mb-4 fade-up">
+  <div class="card-body p-4">
+    <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
+      <div>
+        <h1 class="page-title h4 mb-1">Scan #{{ scan.pk }} <span class="gradient-text">Results</span></h1>
+        <p class="text-muted mb-0"><i class="bi bi-clock me-1"></i>Processed in {{ scan.processing_time_seconds|floatformat:1 }}s</p>
+      </div>
+      <span class="badge badge-glow {% if scan.predicted_class == 'AD' %}badge-ad{% elif scan.predicted_class == 'PD' %}badge-pd{% else %}badge-control{% endif %} fs-6">
+        {{ scan.predicted_label }}
+      </span>
+    </div>
+  </div>
+</div>
+
+<div class="row g-4 fade-up">
+  <div class="col-md-6">
+    <div class="glass-card h-100">
+      <div class="card-header"><i class="bi bi-image me-2"></i>Original MRI</div>
+      <div class="card-body text-center">
+        <img src="{{ scan.original_image.url }}" alt="Original MRI" class="result-img">
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="glass-card h-100">
+      <div class="card-header"><i class="bi bi-fire me-2"></i>Grad-CAM++ Heatmap</div>
+      <div class="card-body text-center">
+        {% if scan.heatmap_image %}
+        <img src="{{ scan.heatmap_image.url }}" alt="Grad-CAM++ heatmap" class="result-img">
+        {% else %}
+        <p class="text-muted py-5">Heatmap not available.</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="glass-card mt-4 fade-up">
+  <div class="card-header"><i class="bi bi-bar-chart me-2"></i>Class Confidence</div>
+  <div class="card-body chart-container">
+    <canvas id="confidenceChart" height="120"></canvas>
+  </div>
+</div>
+{% endif %}
+
+<div class="mt-4 fade-up">
+  <a href="{% url 'scans:upload' %}" class="btn btn-glow me-2"><i class="bi bi-cloud-upload me-1"></i>Upload Another</a>
+  <a href="{% url 'scans:history' %}" class="btn btn-outline-glass"><i class="bi bi-clock-history me-1"></i>View History</a>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+{% if scan.status == 'done' %}
+<script>
+  Chart.defaults.color = '#8b9cb8';
+  Chart.defaults.borderColor = 'rgba(255,255,255,0.08)';
+  const ctx = document.getElementById('confidenceChart');
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ["Alzheimer's (AD)", "Parkinson's (PD)", "Healthy (Control)"],
+      datasets: [{
+        label: 'Confidence',
+        data: [
+          {{ scan.confidence_ad|default:0 }},
+          {{ scan.confidence_pd|default:0 }},
+          {{ scan.confidence_control|default:0 }}
+        ],
+        backgroundColor: ['rgba(231,76,60,0.7)', 'rgba(16,185,129,0.7)', 'rgba(59,130,246,0.7)'],
+        borderColor: ['#e74c3c', '#10b981', '#3b82f6'],
+        borderWidth: 2,
+        borderRadius: 8
+      }]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true, max: 1,
+          grid: { color: 'rgba(255,255,255,0.05)' },
+          ticks: { callback: v => (v * 100).toFixed(0) + '%' }
+        },
+        x: { grid: { display: false } }
+      },
+      plugins: { legend: { display: false } }
+    }
+  });
+</script>
+{% endif %}
+{% endblock %}
