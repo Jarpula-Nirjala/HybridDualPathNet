@@ -135,7 +135,7 @@ Dataset not included due to size.
 
 ![ROC Curve](outputs/roc_curves.png)
 
-![Brain MRI Samples](outputs/sample_images.png)
+![Brain MRI Samples](outputs/sample_images.png.png)
 
 ---
 
