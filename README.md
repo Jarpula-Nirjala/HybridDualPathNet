@@ -139,6 +139,11 @@ Dataset not included due to size.
 
 ![Throughput and Latency](outputs/throughput.png)
 
+![Dataset Overview](outputs/datasetoverview.png)
+
+![PCA and T-SNE plots](outputs/pca.png)
+
+![Precision-Recall Curves](outputs/precision-recall curves.png)
 ---
 
 ## 🛠 Tech Stack
