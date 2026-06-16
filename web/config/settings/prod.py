@@ -1,12 +1,31 @@
 """Production settings — Postgres, WhiteNoise, S3/R2 media, security headers."""
 
+import os
+
 from decouple import Csv, config
 
 from .base import *  # noqa: F403
 
 DEBUG = False
-ALLOWED_HOSTS = config("ALLOWED_HOSTS", cast=Csv())
-CSRF_TRUSTED_ORIGINS = config("CSRF_TRUSTED_ORIGINS", cast=Csv())
+
+# Render sets RENDER_EXTERNAL_URL automatically — use it so ALLOWED_HOSTS/CSRF work on first deploy.
+_render_url = os.environ.get("RENDER_EXTERNAL_URL", "").strip()
+_render_host = ""
+_render_origin = ""
+if _render_url:
+    _render_host = _render_url.replace("https://", "").replace("http://", "").strip("/")
+    _render_origin = _render_url if _render_url.startswith("http") else f"https://{_render_host}"
+
+ALLOWED_HOSTS = config(
+    "ALLOWED_HOSTS",
+    default=f"{_render_host},.onrender.com" if _render_host else ".onrender.com",
+    cast=Csv(),
+)
+CSRF_TRUSTED_ORIGINS = config(
+    "CSRF_TRUSTED_ORIGINS",
+    default=_render_origin,
+    cast=Csv(),
+)
 
 import dj_database_url
 

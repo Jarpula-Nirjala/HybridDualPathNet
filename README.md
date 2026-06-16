@@ -166,6 +166,25 @@ Dataset not included due to size.
 
 ---
 
+## 🚀 Deploy to Render
+
+1. Push this repo to GitHub (already configured).
+2. Go to [Render Dashboard](https://dashboard.render.com/) → **New** → **Blueprint**.
+3. Connect **Jarpula-Nirjala/HybridDualNetPath** and apply the root `render.yaml`.
+4. Render provisions: **web**, **Celery worker**, **Redis**, **PostgreSQL** (Starter plan recommended).
+5. First build downloads model weights from Google Drive automatically (~5–10 min).
+6. After deploy, open the web service **Shell** and run:
+
+   ```bash
+   python manage.py createsuperuser
+   ```
+
+Your live URL will be `https://hybridualnetpath-web.onrender.com` (or similar).
+
+See `web/README.md` for local development and optional S3/R2 media storage.
+
+---
+
 ## ✨ Author
 
 **Jarpula Nirjala (JARPULANIRJALA)**  
