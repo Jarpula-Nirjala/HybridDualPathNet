@@ -131,7 +131,7 @@ Dataset not included due to size.
 
 ![Confusion Matrix](outputs/confusion_matrix.png)
 
-![Training Curves](outputs/training_curves.png)
+![Training Curves](output.png)
 
 ![ROC Curve](outputs/roc_curves.png)
 
